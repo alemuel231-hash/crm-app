@@ -46,7 +46,7 @@ const getSidebarGroups = (lang: LangType): SidebarGroup[] => {
       riders: 'Riders', ridersDir: 'Riders Directory', contacts: 'Contacts',
       finance: 'FINANCE', payments: 'Payments', transactions: 'Transactions', payout: 'Payout Control',
       pricing: 'Pricing', fareMatrix: 'Fare Matrix', distEst: 'Distance Estimator',
-      settings: 'PLATFORM SETTINGS', sysSettings: 'System Settings', appSettings: 'App Settings', globalSockets: 'Global Sockets',
+      settings: 'PLATFORM SETTINGS', sysSettings: 'System Settings', appSettings: 'App Settings', globalSockets: 'Global Sockets', myProfile: 'My Profile', security: 'Security',
       analytics: 'ANALYTICS & REPORTS', analyticsItem: 'Analytics', fulfillment: 'Fulfillment Analysis', earnings: 'Earnings Reports',
       admin: 'ADMINISTRATION', adminItem: 'Administration', managerDir: 'Manager Directory', rolePerms: 'Role Permissions',
     },
@@ -57,7 +57,7 @@ const getSidebarGroups = (lang: LangType): SidebarGroup[] => {
       riders: 'Passagers', ridersDir: 'Annuaire des Passagers', contacts: 'Contacts',
       finance: 'FINANCES', payments: 'Paiements', transactions: 'Transactions', payout: 'Contrôle des Paiements',
       pricing: 'Tarification', fareMatrix: 'Grille Tarifaire', distEst: 'Estimateur de Distance',
-      settings: 'PARAMÈTRES SYSTÈME', sysSettings: 'Paramètres Système', appSettings: "Paramètres de l'App", globalSockets: 'Sockets Globaux',
+      settings: 'PARAMÈTRES SYSTÈME', sysSettings: 'Paramètres Système', appSettings: "Paramètres de l'App", globalSockets: 'Sockets Globaux', myProfile: 'Mon Profil', security: 'Sécurité',
       analytics: 'ANALYSES & RAPPORTS', analyticsItem: 'Analyses', fulfillment: "Analyse d'Exécution", earnings: 'Rapports de Gains',
       admin: 'ADMINISTRATION', adminItem: 'Administration', managerDir: 'Annuaire des Managers', rolePerms: 'Permissions de Rôle',
     },
@@ -68,7 +68,7 @@ const getSidebarGroups = (lang: LangType): SidebarGroup[] => {
       riders: 'الركاب', ridersDir: 'دليل الركاب', contacts: 'جهات الاتصال',
       finance: 'المالية', payments: 'المدفوعات', transactions: 'المعاملات', payout: 'التحكم في المدفوعات',
       pricing: 'التسعير', fareMatrix: 'مصفوفة الأسعار', distEst: 'تقدير المسافة',
-      settings: 'إعدادات المنصة', sysSettings: 'إعدادات النظام', appSettings: 'إعدادات التطبيق', globalSockets: 'المآخذ العالمية',
+      settings: 'إعدادات المنصة', sysSettings: 'إعدادات النظام', appSettings: 'إعدادات التطبيق', globalSockets: 'المآخذ العالمية', myProfile: 'ملفي الشخصي', security: 'الأمان',
       analytics: 'التحليلات والتقارير', analyticsItem: 'التحليلات', fulfillment: 'تحليل التنفيذ', earnings: 'تقارير الأرباح',
       admin: 'الإدارة', adminItem: 'الإدارة', managerDir: 'دليل المديرين', rolePerms: 'صلاحيات الأدوار',
     },
@@ -147,10 +147,7 @@ const getSidebarGroups = (lang: LangType): SidebarGroup[] => {
         {
           label: s.sysSettings,
           icon: <Settings size={16} />,
-          submenu: [
-            { label: s.appSettings, href: '/crm/activities' },
-            { label: s.globalSockets, href: '/crm/proposals' }
-          ]
+          href: '/crm/settings'
         }
       ]
     },

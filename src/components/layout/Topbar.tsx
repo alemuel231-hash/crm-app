@@ -4,7 +4,10 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Menu, LogOut, Settings, User, Lock, ChevronDown, Bell, Moon, Sun, Maximize2, Globe, Search, RefreshCw } from 'lucide-react';
-import { LangType, getDir } from '@/lib/i18n';
+import { isRTL, LangType } from '@/lib/i18n';
+import { auth } from '@/lib/firebase';
+import { signOut } from 'firebase/auth';
+import { getDir } from '@/lib/i18n';
 
 interface TopbarProps {
   onMenuToggle: () => void;
@@ -90,8 +93,14 @@ export default function Topbar({ onMenuToggle }: TopbarProps) {
     window.dispatchEvent(new Event('languageChange'));
   };
 
-  const handleLogout = () => {
-    router.push('/');
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      router.push('/');
+    }
   };
 
   const handleToggleFullscreen = () => {
@@ -294,15 +303,15 @@ export default function Topbar({ onMenuToggle }: TopbarProps) {
                   <p className="text-[10px] text-[var(--text-muted)] mt-0.5">fred@orbitfleettransport.com</p>
                 </div>
                 
-                <button onClick={() => setShowUserMenu(false)} className="w-full text-left flex items-center gap-2.5 px-4 py-2.5 hover:bg-[var(--hover-bg)] transition cursor-pointer text-[var(--foreground)] font-semibold">
+                <button onClick={() => { setShowUserMenu(false); router.push('/crm/settings'); }} className="w-full text-left flex items-center gap-2.5 px-4 py-2.5 hover:bg-[var(--hover-bg)] transition cursor-pointer text-[var(--foreground)] font-semibold">
                   <User size={14} className="text-[var(--text-muted)]" />
                   {activeLang === 'AR' ? 'ملفي الشخصي' : activeLang === 'FR' ? 'Mon profil' : 'My Profile'}
                 </button>
-                <button onClick={() => setShowUserMenu(false)} className="w-full text-left flex items-center gap-2.5 px-4 py-2.5 hover:bg-[var(--hover-bg)] transition cursor-pointer text-[var(--foreground)] font-semibold">
+                <button onClick={() => { setShowUserMenu(false); router.push('/crm/settings'); }} className="w-full text-left flex items-center gap-2.5 px-4 py-2.5 hover:bg-[var(--hover-bg)] transition cursor-pointer text-[var(--foreground)] font-semibold">
                   <Settings size={14} className="text-[var(--text-muted)]" />
                   {activeLang === 'AR' ? 'إعدادات النظام' : activeLang === 'FR' ? 'Paramètres' : 'System Settings'}
                 </button>
-                <button onClick={() => setShowUserMenu(false)} className="w-full text-left flex items-center gap-2.5 px-4 py-2.5 hover:bg-[var(--hover-bg)] transition cursor-pointer text-[var(--foreground)] font-semibold">
+                <button onClick={() => { setShowUserMenu(false); handleLogout(); }} className="w-full text-left flex items-center gap-2.5 px-4 py-2.5 hover:bg-[var(--hover-bg)] transition cursor-pointer text-[var(--foreground)] font-semibold">
                   <Lock size={14} className="text-[var(--text-muted)]" />
                   {activeLang === 'AR' ? 'قفل لوحة التحكم' : activeLang === 'FR' ? 'Verrouiller' : 'Lock Console'}
                 </button>

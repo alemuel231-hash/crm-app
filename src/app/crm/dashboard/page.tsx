@@ -42,9 +42,7 @@ interface KPICard {
   value: string | number;
   subtitle: string;
   icon: React.ReactNode;
-  trend: number; // % change, positive or negative
   accentClass: string; // tailwind color classes
-  sparkline: number[]; // 7 data points for mini bar chart
   href: string; // link to detail page
 }
 
@@ -83,32 +81,7 @@ const docsConfig: Record<string, { cls: string; icon: React.ReactNode }> = {
   Missing:  { cls: 'badge-danger',  icon: <XCircle size={10} /> },
 };
 
-function MiniSparkline({ data, color }: { data: number[]; color: string }) {
-  const max = Math.max(...data);
-  const min = Math.min(...data);
-  const range = max - min || 1;
-  const h = 32;
-  const w = 70;
-  const pts = data.map((v, i) => {
-    const x = (i / (data.length - 1)) * w;
-    const y = h - ((v - min) / range) * h;
-    return `${x},${y}`;
-  });
-  const polyline = pts.join(' ');
-  const fillPts = `0,${h} ${polyline} ${w},${h}`;
-  return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="overflow-visible">
-      <defs>
-        <linearGradient id={`sg-${color}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.25" />
-          <stop offset="100%" stopColor={color} stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <polygon points={fillPts} fill={`url(#sg-${color})`} />
-      <polyline points={polyline} fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
+
 
 function DonutChart({ completed, cancelled, pending }: { completed: number; cancelled: number; pending: number }) {
   const total = completed + cancelled + pending || 1;
@@ -228,9 +201,7 @@ const CRMDashboard: React.FC = () => {
           value: driverCount,
           subtitle: `${activeCount} currently active`,
           icon: <Car className="w-5 h-5" />,
-          trend: +12,
           accentClass: 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40',
-          sparkline: [0, 0, 0, 0, driverCount],
           href: '/crm/drivers',
         },
         {
@@ -239,9 +210,7 @@ const CRMDashboard: React.FC = () => {
           value: pendingCount,
           subtitle: 'Awaiting document review',
           icon: <Shield className="w-5 h-5" />,
-          trend: -2,
           accentClass: 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40',
-          sparkline: [0, 0, 0, pendingCount],
           href: '/crm/drivers/pending-verification',
         },
         {
@@ -250,9 +219,7 @@ const CRMDashboard: React.FC = () => {
           value: tripCount,
           subtitle: `${comp} completed globally`,
           icon: <Navigation className="w-5 h-5" />,
-          trend: +8,
           accentClass: 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40',
-          sparkline: [0, 0, 0, tripCount],
           href: '/crm/trips',
         },
         {
@@ -261,9 +228,7 @@ const CRMDashboard: React.FC = () => {
           value: `GHS ${todayRev.toFixed(2)}`,
           subtitle: `GHS ${avgFare.toFixed(2)} avg per trip`,
           icon: <DollarSign className="w-5 h-5" />,
-          trend: +22,
           accentClass: 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/40',
-          sparkline: [0, 0, todayRev],
           href: '/crm/payments',
         },
         {
@@ -272,9 +237,7 @@ const CRMDashboard: React.FC = () => {
           value: `GHS ${weekRev.toFixed(2)}`,
           subtitle: 'Last 7 days total',
           icon: <BarChart3 className="w-5 h-5" />,
-          trend: +5,
           accentClass: 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-950/40',
-          sparkline: [0, 0, weekRev],
           href: '/crm/payments',
         },
         {
@@ -283,9 +246,7 @@ const CRMDashboard: React.FC = () => {
           value: riderCount,
           subtitle: 'Active passengers',
           icon: <Users className="w-5 h-5" />,
-          trend: +15,
           accentClass: 'text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40',
-          sparkline: [0, riderCount],
           href: '/crm/riders',
         },
       ]);
@@ -405,28 +366,23 @@ const CRMDashboard: React.FC = () => {
         {/* ── KPI CARDS ── */}
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
           {kpis.map((kpi, idx) => {
-            const up = kpi.trend >= 0;
             return (
               <Link
                 href={kpi.href}
                 key={kpi.id}
                 id={`kpi-${kpi.id}`}
-                className="orbit-card p-5 flex flex-col gap-3 hover:shadow-orbit-lg transition-all duration-300 group block cursor-pointer hover:scale-[1.02] hover:translate-y-[-6px] animate-fade-in border border-[var(--border-color)]/50 hover:border-[var(--border-color)] bg-gradient-to-br from-[var(--card-bg)] to-[var(--hover-bg)]/30 min-h-[140px]"
+                className="orbit-card p-5 flex flex-col gap-3 hover:shadow-orbit-lg transition-all duration-300 group block cursor-pointer hover:scale-[1.02] hover:translate-y-[-6px] animate-fade-in border border-[var(--border-color)]/50 hover:border-[var(--border-color)] bg-gradient-to-br from-[var(--card-bg)] to-[var(--hover-bg)]/30 min-h-[120px]"
                 style={{ animationDelay: `${idx * 50}ms` }}
               >
-                {/* Top row: icon + trend */}
+                {/* Top row: icon */}
                 <div className="flex items-start justify-between">
                   <div className={`p-3 rounded-xl ${kpi.accentClass} shadow-sm`}>
                     {kpi.icon}
                   </div>
-                  <span className={`inline-flex items-center gap-0.5 text-xs font-bold px-2 py-1 rounded-full ${up ? 'text-emerald-700 dark:text-emerald-300 bg-emerald-100/60 dark:bg-emerald-950/40' : 'text-rose-700 dark:text-rose-300 bg-rose-100/60 dark:bg-rose-950/40'}`}>
-                    {up ? <ArrowUpRight size={13} /> : <ArrowDownRight size={13} />}
-                    {Math.abs(kpi.trend)}%
-                  </span>
                 </div>
 
                 {/* Value + title */}
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 mt-2">
                   <p className="text-2xl font-extrabold text-[var(--foreground)] tracking-tight leading-tight break-words large-number">
                     {kpi.value}
                   </p>
@@ -435,20 +391,8 @@ const CRMDashboard: React.FC = () => {
                   </p>
                 </div>
 
-                {/* Sparkline */}
-                <div className="mt-auto pt-2 opacity-80 group-hover:opacity-100 transition-opacity duration-200">
-                  <MiniSparkline
-                    data={kpi.sparkline}
-                    color={kpi.accentClass.includes('blue') ? '#3b82f6' :
-                           kpi.accentClass.includes('amber') ? '#f59e0b' :
-                           kpi.accentClass.includes('emerald') ? '#57b78a' :
-                           kpi.accentClass.includes('indigo') ? '#6366f1' :
-                           kpi.accentClass.includes('purple') ? '#a855f7' : '#fb764a'}
-                  />
-                </div>
-
                 {/* Subtitle */}
-                <p className="text-[11px] text-[var(--text-muted)] leading-relaxed font-medium">
+                <p className="text-[11px] text-[var(--text-muted)] leading-relaxed font-medium mt-auto">
                   {kpi.subtitle}
                 </p>
               </Link>
