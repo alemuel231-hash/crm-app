@@ -43,7 +43,7 @@ export default function PaymentsPage() {
                 <tr key={t.tripID || Math.random()} className="hover:bg-[var(--hover-bg)] transition">
                   <td className="p-4 text-[var(--text-muted)] text-sm font-mono">{t.tripID?.substring(0,8) || 'N/A'}</td>
                   <td className="p-4 text-[var(--foreground)] font-medium">{t.rider_name || 'Unknown'}</td>
-                  <td className="p-4 text-emerald-600 dark:text-emerald-500 font-bold">GHS {parseFloat(t.tripCost || 0).toFixed(2)}</td>
+                  <td className="p-4 text-emerald-600 dark:text-emerald-500 font-bold">GHS {Number(t.tripCost || 0).toFixed(2)}</td>
                   <td className="p-4 text-[var(--text-secondary)]">{t.payment_method || 'Cash'}</td>
                   <td className="p-4">
                     <span className={`badge inline-flex items-center gap-1 ${t.paymentStatus === 'paid' ? 'badge-success' : 'badge-warning'}`}>

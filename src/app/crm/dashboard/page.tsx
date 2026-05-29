@@ -197,7 +197,7 @@ const CRMDashboard: React.FC = () => {
       const oneDay = 24 * 60 * 60 * 1000;
 
       tripArr.forEach((t: any) => {
-        const cost = parseFloat(t.tripCost || t.fare || 0) || 0;
+        const cost = Number(t.tripCost || t.fare || 0) || 0;
         revenue += cost;
         const s = (t.paymentStatus || t.status || '').toLowerCase();
         if (s === 'paid' || s === 'completed') comp++;
@@ -312,7 +312,7 @@ const CRMDashboard: React.FC = () => {
         driver:      t.driverID || t.driver_name || t.driver || 'Unknown Driver',
         pickup:      t.pickup_address  || t.from || 'Unknown Pickup',
         destination: t.destination_address || t.dropoff_address || t.to || 'Unknown Destination',
-        fare:        `GHS ${parseFloat(t.tripCost || t.fare || 0).toFixed(2)}`,
+        fare:        `GHS ${Number(t.tripCost || t.fare || 0).toFixed(2)}`,
         status:      (t.paymentStatus === 'paid' ? 'Completed' : t.paymentStatus === 'cancelled' ? 'Cancelled' : t.status || 'Pending'),
         time:        t.created_at ? new Date(t.created_at).toLocaleTimeString() : '—',
         rating:      t.rating,

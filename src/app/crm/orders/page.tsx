@@ -53,7 +53,7 @@ export default function OrdersPage() {
               
               <div className="mt-5 pt-4 border-t border-[var(--border-color)] flex justify-between items-center">
                 <span className="text-[var(--text-muted)] text-sm font-semibold uppercase">Fare</span>
-                <span className="text-[var(--foreground)] font-bold text-xl">GHS {parseFloat(t.tripCost || 0).toFixed(2)}</span>
+                <span className="text-[var(--foreground)] font-bold text-xl">GHS {Number(t.tripCost || 0).toFixed(2)}</span>
               </div>
             </div>
           ))}

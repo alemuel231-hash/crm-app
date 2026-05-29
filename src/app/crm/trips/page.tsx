@@ -321,7 +321,7 @@ export default function TripsPage() {
                         </div>
                       </td>
                       <td className="font-bold text-[var(--foreground)] font-mono">
-                        GHS ${parseFloat(trip.tripCost || trip.fare || 0).toFixed(2)}
+                        GHS ${Number(trip.tripCost || trip.fare || 0).toFixed(2)}
                       </td>
                       <td>{getStatusBadge(trip)}</td>
                       <td className="text-center">
